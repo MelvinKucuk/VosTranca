@@ -61,7 +61,7 @@ public class AdapterServicios extends RecyclerView.Adapter {
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    int year = Calendar.getInstance().get(Calendar.YEAR);
+                    /*int year = Calendar.getInstance().get(Calendar.YEAR);
                     int month = Calendar.getInstance().get(Calendar.MONTH);
                     int day = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
                     DatePickerDialog datePickerDialog = new DatePickerDialog(itemView.getContext(), new DatePickerDialog.OnDateSetListener() {
@@ -70,7 +70,7 @@ public class AdapterServicios extends RecyclerView.Adapter {
 
                         }
                     }, year, month, day);
-                    datePickerDialog.show();
+                    datePickerDialog.show();*/
                 }
             });
         }

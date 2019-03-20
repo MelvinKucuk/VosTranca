@@ -8,7 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import com.melvin.vostranca.R;
 
 public class MainActivity extends AppCompatActivity implements ServiciosFragment.OnFragmentInteractionListener,
-            ReservaFragment.OnFragmentInteractionListener{
+            ReservaFragment.OnFragmentInteractionListener, FechasFragment.OnFragmentInteractionListener{
 
 
     @Override
@@ -20,7 +20,7 @@ public class MainActivity extends AppCompatActivity implements ServiciosFragment
 
         ReservaFragment fragment2 = new ReservaFragment();
 
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragmentContainer, fragment).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragmentContainer, fragment2).commit();
 
     }
 
