@@ -10,7 +10,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.melvin.vostranca.R;
+import com.melvin.vostranca.controller.ControllerFechas;
+import com.melvin.vostranca.model.Fecha;
+import com.melvin.vostranca.util.ResultListener;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -18,9 +26,11 @@ import com.melvin.vostranca.R;
  * {@link FechasFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
  */
-public class FechasFragment extends Fragment {
+public class FechasFragment extends Fragment implements AdapterFechas.FechasInterface{
 
     private OnFragmentInteractionListener mListener;
+    private AdapterFechas adapter;
+    private List<Fecha> datos = new ArrayList<>();
 
     public FechasFragment() {
         // Required empty public constructor
@@ -35,15 +45,21 @@ public class FechasFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_fechas, container, false);
 
         RecyclerView recyclerView = view.findViewById(R.id.recyclerFechas);
-        //RecyclerView.LayoutManager layoutManager = new GridLayoutManager();
+        adapter = new AdapterFechas(datos, this);
+        RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getContext(), 3);
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setAdapter(adapter);
+
+        new ControllerFechas().obtenerFechas(getContext(), new ResultListener<Fecha>() {
+            @Override
+            public void finish(Fecha resultado) {
+                datos.add(resultado);
+                adapter.setDatos(datos);
+            }
+        });
         return view;
     }
 
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
-    }
 
     @Override
     public void onAttach(Context context) {
@@ -63,7 +79,11 @@ public class FechasFragment extends Fragment {
     }
 
     public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
+        void pasarFecha(String fecha);
+    }
+
+    @Override
+    public void fechaSeleccionada(String fecha) {
+        mListener.pasarFecha(fecha);
     }
 }

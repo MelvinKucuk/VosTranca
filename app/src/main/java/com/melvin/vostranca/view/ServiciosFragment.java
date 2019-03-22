@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class ServiciosFragment extends Fragment {
+public class ServiciosFragment extends Fragment implements AdapterServicios.ServiciosInterface{
 
     private OnFragmentInteractionListener mListener;
     private List<Servicio> datos = new ArrayList<>();
@@ -49,7 +49,7 @@ public class ServiciosFragment extends Fragment {
         });
 
         RecyclerView recycler = view.findViewById(R.id.recyclerServicios);
-        adapter = new AdapterServicios(datos);
+        adapter = new AdapterServicios(datos, this);
         RecyclerView.LayoutManager manager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         recycler.setAdapter(adapter);
         recycler.setLayoutManager(manager);
@@ -76,7 +76,11 @@ public class ServiciosFragment extends Fragment {
     }
 
     public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
+        void servicioSeleccionado(String nombre, String descripcion);
+    }
+
+    @Override
+    public void servicioElegido(String nombre, String descripcion) {
+        mListener.servicioSeleccionado(nombre, descripcion);
     }
 }

@@ -3,16 +3,31 @@ package com.melvin.vostranca.view;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.melvin.vostranca.R;
+import com.melvin.vostranca.util.GlideApp;
 
 public class ReservaFragment extends Fragment {
 
+    public static final String KEY_NOMBRE = "nombre";
+    public static final String KEY_DESCRIPCION = "descripcion";
+
     private OnFragmentInteractionListener mListener;
+    private TextView textoFecha;
 
     public ReservaFragment() {
         // Required empty public constructor
@@ -23,7 +38,89 @@ public class ReservaFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_reserva, container, false);
+        final View view = inflater.inflate(R.layout.fragment_reserva, container, false);
+
+        Button botonFechas = view.findViewById(R.id.botonFechas);
+        botonFechas.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mListener.irFechasFragment();
+            }
+        });
+        textoFecha = view.findViewById(R.id.textoFechaSeleccionada);
+
+        final EditText nombre = view.findViewById(R.id.editTextNombre);
+        final EditText direccion = view.findViewById(R.id.editTextDireccion);
+        final EditText personas = view.findViewById(R.id.editTextPersonas);
+        final EditText telefono = view.findViewById(R.id.editTextTelefono);
+        final TextInputLayout inputNombre = view.findViewById(R.id.inputLayoutNombre);
+        final TextInputLayout inputDireccion = view.findViewById(R.id.inputLayoutDireccion);
+        final TextInputLayout inputPersonas = view.findViewById(R.id.inputLayoutPersonas);
+        final TextInputLayout inputTelefono = view.findViewById(R.id.inputLayoutTelefono);
+
+        Button botonConfirmar = view.findViewById(R.id.botonConfirmar);
+        botonConfirmar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!nombre.getText().toString().isEmpty()){
+                    inputNombre.setError(null);
+                    inputNombre.setErrorEnabled(false);
+                    if (!telefono.getText().toString().isEmpty()){
+                        inputTelefono.setError(null);
+                        inputTelefono.setErrorEnabled(false);
+                        if (!personas.getText().toString().isEmpty()){
+                            inputPersonas.setError(null);
+                            inputPersonas.setErrorEnabled(false);
+                            if (!direccion.getText().toString().isEmpty()){
+                                inputDireccion.setError(null);
+                                inputDireccion.setErrorEnabled(false);
+                                inputDireccion.clearFocus();
+                                if (!textoFecha.getText().toString().isEmpty()){
+
+                                    // TODO Proceso de reserva
+                                    Toast.makeText(getContext(), "Reserva Exitosa", Toast.LENGTH_SHORT).show();
+
+                                } else {
+                                    Toast.makeText(getContext(), "Debes seleccionar una fecha", Toast.LENGTH_SHORT).show();
+                                }
+                            } else {
+                                generarError(direccion, inputDireccion);
+                            }
+                        } else {
+                            generarError(personas, inputPersonas);
+                        }
+                    } else{
+                        generarError(telefono, inputTelefono);
+                    }
+                } else{
+                    generarError(nombre, inputNombre);
+                }
+            }
+        });
+
+        Bundle datos = getArguments();
+
+        String nombreServicio = datos.getString(KEY_NOMBRE);
+        String descripcion = datos.getString(KEY_DESCRIPCION);
+        LinearLayout servicio = view.findViewById(R.id.servicioSeleccionado);
+        TextView textNombre = servicio.findViewById(R.id.nombreServicio);
+        TextView textDescripcion = servicio.findViewById(R.id.descripcionServicio);
+        ImageView imagenServicio = servicio.findViewById(R.id.imagenServicio);
+
+        textNombre.setText(nombreServicio);
+        textDescripcion.setText(descripcion);
+        String nombreImagen = "servicios/"+nombreServicio.toLowerCase()+".png";
+        StorageReference reference = FirebaseStorage.getInstance().getReference().child(nombreImagen);
+        GlideApp.with(getContext()).load(reference).into(imagenServicio);
+
+
+        return view;
+    }
+
+    private void generarError(EditText editText, TextInputLayout textInputLayout){
+        textInputLayout.requestFocus();
+        mostrarTeclado(editText);
+        textInputLayout.setError(getResources().getText(R.string.campoVacio));
     }
 
 
@@ -46,7 +143,23 @@ public class ReservaFragment extends Fragment {
 
 
     public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
+        void irFechasFragment();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        String fechaSeleccionada = ((MainActivity)getActivity()).getFecha();
+        textoFecha.setText(fechaSeleccionada);
+    }
+
+
+    public void mostrarTeclado(View view) {
+        if (view.requestFocus()) {
+            InputMethodManager imm = (InputMethodManager)
+                    getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.showSoftInput(view, InputMethodManager.SHOW_IMPLICIT);
+        }
     }
 }

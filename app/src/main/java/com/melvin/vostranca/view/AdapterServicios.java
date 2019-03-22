@@ -22,9 +22,11 @@ import java.util.List;
 public class AdapterServicios extends RecyclerView.Adapter {
 
     private List<Servicio> datos;
+    private ServiciosInterface listener;
 
-    public AdapterServicios(List<Servicio> datos){
+    public AdapterServicios(List<Servicio> datos, ServiciosInterface listener) {
         this.datos = datos;
+        this.listener = listener;
     }
 
     @NonNull
@@ -61,16 +63,8 @@ public class AdapterServicios extends RecyclerView.Adapter {
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    /*int year = Calendar.getInstance().get(Calendar.YEAR);
-                    int month = Calendar.getInstance().get(Calendar.MONTH);
-                    int day = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
-                    DatePickerDialog datePickerDialog = new DatePickerDialog(itemView.getContext(), new DatePickerDialog.OnDateSetListener() {
-                        @Override
-                        public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-
-                        }
-                    }, year, month, day);
-                    datePickerDialog.show();*/
+                    Servicio servicio = datos.get(getAdapterPosition());
+                    listener.servicioElegido(servicio.getNombre(), servicio.getDescripcion());
                 }
             });
         }
@@ -87,5 +81,9 @@ public class AdapterServicios extends RecyclerView.Adapter {
     public void setDatos(List<Servicio> datos) {
         this.datos = datos;
         notifyDataSetChanged();
+    }
+
+    public interface ServiciosInterface{
+        void servicioElegido(String nombre, String descripcion);
     }
 }
