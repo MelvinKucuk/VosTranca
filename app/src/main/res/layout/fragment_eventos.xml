@@ -3,11 +3,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".view.FechasFragment"
-    android:background="#C9C9C9">
+    tools:context=".view.EventosFragment">
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/recyclerFechas"
+        android:id="@+id/recyclerEventos"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 

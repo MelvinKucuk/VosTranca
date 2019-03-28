@@ -7,10 +7,20 @@
     android:layout_height="match_parent"
     tools:context=".view.MainActivity">
 
+    <android.support.design.widget.BottomNavigationView
+        android:id="@+id/bottomNaviagtionMain"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/blanco"
+        app:elevation="26dp"
+        app:menu="@menu/menu_bottom_navigation"/>
+
     <FrameLayout
         android:id="@+id/fragmentContainer"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:layout_above="@id/bottomNaviagtionMain"/>
 
 
 </RelativeLayout>

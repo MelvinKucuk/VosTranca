@@ -98,6 +98,7 @@ public class ReservaFragment extends Fragment {
             }
         });
 
+
         Bundle datos = getArguments();
 
         String nombreServicio = datos.getString(KEY_NOMBRE);
@@ -112,6 +113,14 @@ public class ReservaFragment extends Fragment {
         String nombreImagen = "servicios/"+nombreServicio.toLowerCase()+".png";
         StorageReference reference = FirebaseStorage.getInstance().getReference().child(nombreImagen);
         GlideApp.with(getContext()).load(reference).into(imagenServicio);
+
+        Button botonCancelar = view.findViewById(R.id.botonCancelar);
+        botonCancelar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getActivity().getSupportFragmentManager().popBackStack();
+            }
+        });
 
 
         return view;

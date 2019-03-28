@@ -47,11 +47,13 @@ public class AdapterFechas extends RecyclerView.Adapter {
 
         private TextView numero;
         private TextView mes;
+        private TextView dia;
 
         public FechasViewHolder(@NonNull View itemView) {
             super(itemView);
             this.numero = itemView.findViewById(R.id.textoNumero);
             this.mes = itemView.findViewById(R.id.textoMes);
+            this.dia = itemView.findViewById(R.id.textoDia);
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -65,6 +67,7 @@ public class AdapterFechas extends RecyclerView.Adapter {
         public void cargar(Fecha fecha){
             numero.setText(fecha.getNumero().toString());
             mes.setText(fecha.getMes());
+            dia.setText(fecha.getDia());
         }
     }
 
