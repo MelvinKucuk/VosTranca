@@ -16,6 +16,7 @@ import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.iid.FirebaseInstanceId;
@@ -100,11 +101,10 @@ public class MainActivity extends AppCompatActivity implements ServiciosFragment
                 });
 
         String asd = "dddd";
-        FirebaseDatabase.getInstance().getReference().child("messages").child("-LO-2faCwM").child("text").setValue(asd)
-        .addOnSuccessListener(new OnSuccessListener<Void>() {
+        FirebaseDatabase.getInstance().getReference().child("messages").child("-LO-2faCwM").child("text").setValue(asd, new DatabaseReference.CompletionListener() {
             @Override
-            public void onSuccess(Void aVoid) {
-                Toast.makeText(MainActivity.this, "Se grabo", Toast.LENGTH_SHORT).show();
+            public void onComplete(DatabaseError error, DatabaseReference ref) {
+                Toast.makeText(MainActivity.this, "se grabo", Toast.LENGTH_SHORT).show();
             }
         });
     }
