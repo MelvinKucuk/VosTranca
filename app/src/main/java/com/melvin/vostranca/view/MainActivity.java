@@ -100,6 +100,10 @@ public class MainActivity extends AppCompatActivity implements ServiciosFragment
                     }
                 });
 
+        String token = FirebaseInstanceId.getInstance().getToken();
+
+        Log.d("TOKEN", token);
+
         String asd = "dddd";
         FirebaseDatabase.getInstance().getReference().child("messages").child("-LO-2faCwM").child("text").setValue(asd, new DatabaseReference.CompletionListener() {
             @Override
@@ -107,6 +111,9 @@ public class MainActivity extends AppCompatActivity implements ServiciosFragment
                 Toast.makeText(MainActivity.this, "se grabo", Toast.LENGTH_SHORT).show();
             }
         });
+
+
+
     }
 
     private void cargarFragment(Fragment unFragment){

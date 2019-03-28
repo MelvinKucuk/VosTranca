@@ -57,3 +57,9 @@ fastlane/Preview.html
 fastlane/screenshots
 fastlane/test_output
 fastlane/readme.md
+
+\.firebaserc
+
+database\.rules\.json
+
+firebase\.json
