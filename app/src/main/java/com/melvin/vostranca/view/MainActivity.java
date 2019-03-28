@@ -65,54 +65,7 @@ public class MainActivity extends AppCompatActivity implements ServiciosFragment
             }
         });
 
-        FirebaseInstanceId.getInstance().getInstanceId()
-                .addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<InstanceIdResult> task) {
-                        String TAG = "FCM";
-                        if (!task.isSuccessful()) {
-                            Log.w(TAG, "getInstanceId failed", task.getException());
-                            return;
-                        }
-
-                        // Get new Instance ID token
-                        String token = task.getResult().getToken();
-
-                        // Log and toast
-                        String msg = token;
-
-                        Log.d(TAG, msg);
-                        Toast.makeText(MainActivity.this, msg, Toast.LENGTH_SHORT).show();
-
-                        // This registration token comes from the client FCM SDKs.
-                        String registrationToken = "cj35uI_xt0A:APA91bEaba50YCGDIWHf8hXaWuk-WnRN3DDtV1kPrDFOUh9irhNX5hr2ljFiNGMml-i-8slHKN9x2yEIe9daiv9JGdzrPtr46ialhXgl-yaexxRPQpf0q8BkMviKgJF1IlQw4G5za1bD";
-
-                        // See documentation on defining a message payload.
-                        RemoteMessage message = new RemoteMessage.Builder(registrationToken+"@gcm.googleapis.com")
-                                .addData("score", "850")
-                                .addData("time", "2:45")
-                                .build();
-
-                        // Send a message to the device corresponding to the provided
-                        // registration token.
-                        FirebaseMessaging.getInstance().send(message);
-                        // Response is a message ID string.
-                    }
-                });
-
-        String token = FirebaseInstanceId.getInstance().getToken();
-
-        Log.d("TOKEN", token);
-
-        String asd = "dddd";
-        FirebaseDatabase.getInstance().getReference().child("messages").child("-LO-2faCwM").child("text").setValue(asd, new DatabaseReference.CompletionListener() {
-            @Override
-            public void onComplete(DatabaseError error, DatabaseReference ref) {
-                Toast.makeText(MainActivity.this, "se grabo", Toast.LENGTH_SHORT).show();
-            }
-        });
-
-
+        FirebaseMessaging.getInstance().unsubscribeFromTopic("push");
 
     }
 
@@ -155,7 +108,7 @@ public class MainActivity extends AppCompatActivity implements ServiciosFragment
 
     @Override
     public void onFragmentInteraction() {
-        GoogleApiAvailability.getInstance().makeGooglePlayServicesAvailable(this);
+
     }
 
     @Override
@@ -164,10 +117,4 @@ public class MainActivity extends AppCompatActivity implements ServiciosFragment
         GoogleApiAvailability.getInstance().makeGooglePlayServicesAvailable(this);
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        GoogleApiAvailability.getInstance().makeGooglePlayServicesAvailable(this);
-
-    }
 }
