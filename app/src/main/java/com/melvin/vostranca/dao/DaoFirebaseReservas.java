@@ -3,6 +3,7 @@ package com.melvin.vostranca.dao;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -46,4 +47,21 @@ public class DaoFirebaseReservas {
             }
         });
     }
+
+
+    public void grabarReserva(Reserva reserva, final ResultListener<Boolean> listenerController){
+
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("reservas").push();
+
+        String key = reference.getKey();
+
+        reference.setValue(reserva).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                listenerController.finish(true);
+            }
+        });
+
+    }
+
 }

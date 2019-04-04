@@ -19,7 +19,9 @@ import android.widget.Toast;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.melvin.vostranca.R;
+import com.melvin.vostranca.controller.ControllerReservas;
 import com.melvin.vostranca.util.GlideApp;
+import com.melvin.vostranca.util.ResultListener;
 
 public class ReservaFragment extends Fragment {
 
@@ -57,6 +59,34 @@ public class ReservaFragment extends Fragment {
         final TextInputLayout inputDireccion = view.findViewById(R.id.inputLayoutDireccion);
         final TextInputLayout inputPersonas = view.findViewById(R.id.inputLayoutPersonas);
         final TextInputLayout inputTelefono = view.findViewById(R.id.inputLayoutTelefono);
+        LinearLayout servicio = view.findViewById(R.id.servicioSeleccionado);
+        TextView textNombre = servicio.findViewById(R.id.nombreServicio);
+        TextView textDescripcion = servicio.findViewById(R.id.descripcionServicio);
+        ImageView imagenServicio = servicio.findViewById(R.id.imagenServicio);
+
+        Bundle datos = getArguments();
+
+        final String nombreServicio = datos.getString(KEY_NOMBRE);
+        String descripcion = datos.getString(KEY_DESCRIPCION);
+
+
+        // Cargar View del servicio
+        textNombre.setText(nombreServicio);
+        textDescripcion.setText(descripcion);
+        String nombreImagen = "servicios/"+nombreServicio.toLowerCase()+".png";
+        StorageReference reference = FirebaseStorage.getInstance().getReference().child(nombreImagen);
+        GlideApp.with(getContext()).load(reference).into(imagenServicio);
+
+
+        // Funcionamiento botones
+        Button botonCancelar = view.findViewById(R.id.botonCancelar);
+        botonCancelar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getActivity().getSupportFragmentManager().popBackStack();
+            }
+        });
+
 
         Button botonConfirmar = view.findViewById(R.id.botonConfirmar);
         botonConfirmar.setOnClickListener(new View.OnClickListener() {
@@ -77,8 +107,27 @@ public class ReservaFragment extends Fragment {
                                 inputDireccion.clearFocus();
                                 if (!textoFecha.getText().toString().isEmpty()){
 
-                                    // TODO Proceso de reserva
-                                    Toast.makeText(getContext(), "Reserva Exitosa", Toast.LENGTH_SHORT).show();
+                                    String nombreTexto = nombre.getText().toString();
+                                    String direccionTexto = direccion.getText().toString();
+                                    Integer personasTexto = Integer.parseInt(personas.getText().toString());
+                                    Integer telefonoTexto = Integer.parseInt(telefono.getText().toString());
+                                    String fecha = textoFecha.getText().toString();
+
+                                    new ControllerReservas().grabarReserva(getContext(), nombreTexto, nombreServicio, telefonoTexto,
+                                            personasTexto, direccionTexto, fecha, new ResultListener<Boolean>() {
+                                                @Override
+                                                public void finish(Boolean resultado) {
+                                                    if (resultado){
+                                                        nombre.setText(null);
+                                                        direccion.setText(null);
+                                                        telefono.setText(null);
+                                                        personas.setText(null);
+
+                                                        Toast.makeText(getContext(), "Reserva Exitosa", Toast.LENGTH_SHORT).show();
+                                                    }
+                                                }
+                                            });
+
 
                                 } else {
                                     Toast.makeText(getContext(), "Debes seleccionar una fecha", Toast.LENGTH_SHORT).show();
@@ -99,28 +148,7 @@ public class ReservaFragment extends Fragment {
         });
 
 
-        Bundle datos = getArguments();
 
-        String nombreServicio = datos.getString(KEY_NOMBRE);
-        String descripcion = datos.getString(KEY_DESCRIPCION);
-        LinearLayout servicio = view.findViewById(R.id.servicioSeleccionado);
-        TextView textNombre = servicio.findViewById(R.id.nombreServicio);
-        TextView textDescripcion = servicio.findViewById(R.id.descripcionServicio);
-        ImageView imagenServicio = servicio.findViewById(R.id.imagenServicio);
-
-        textNombre.setText(nombreServicio);
-        textDescripcion.setText(descripcion);
-        String nombreImagen = "servicios/"+nombreServicio.toLowerCase()+".png";
-        StorageReference reference = FirebaseStorage.getInstance().getReference().child(nombreImagen);
-        GlideApp.with(getContext()).load(reference).into(imagenServicio);
-
-        Button botonCancelar = view.findViewById(R.id.botonCancelar);
-        botonCancelar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getActivity().getSupportFragmentManager().popBackStack();
-            }
-        });
 
 
         return view;

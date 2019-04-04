@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import com.melvin.vostranca.R;
 import com.melvin.vostranca.controller.ControllerEventos;
 import com.melvin.vostranca.controller.ControllerServicios;
+import com.melvin.vostranca.model.Evento;
 import com.melvin.vostranca.model.Servicio;
 import com.melvin.vostranca.util.ResultListener;
 
@@ -20,11 +21,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class EventosFragment extends Fragment implements AdapterServicios.ServiciosInterface{
+public class EventosFragment extends Fragment implements AdapterEventos.EventosInterface{
 
     private OnFragmentInteractionListener mListener;
-    private List<Servicio> datos = new ArrayList<>();
-    private AdapterServicios adapter;
+    private List<Evento> datos = new ArrayList<>();
+    private AdapterEventos adapter;
 
     public EventosFragment() {
         // Required empty public constructor
@@ -37,16 +38,16 @@ public class EventosFragment extends Fragment implements AdapterServicios.Servic
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_eventos, container, false);
 
-        new ControllerEventos().obtenerServicios(getContext(), new ResultListener<Servicio>() {
+        new ControllerEventos().obtenerServicios(getContext(), new ResultListener<Evento>() {
             @Override
-            public void finish(Servicio resultado) {
+            public void finish(Evento resultado) {
                 datos.add(resultado);
                 adapter.setDatos(datos);
             }
         });
 
         RecyclerView recycler = view.findViewById(R.id.recyclerEventos);
-        adapter = new AdapterServicios(datos, this);
+        adapter = new AdapterEventos(datos, this);
         RecyclerView.LayoutManager manager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         recycler.setAdapter(adapter);
         recycler.setLayoutManager(manager);
@@ -76,11 +77,11 @@ public class EventosFragment extends Fragment implements AdapterServicios.Servic
     }
 
     public interface OnFragmentInteractionListener {
-        void onFragmentInteraction();
+        void eventoSeleciconado(Bundle datos);
     }
 
     @Override
-    public void servicioElegido(String nombre, String descripcion) {
-        mListener.onFragmentInteraction();
+    public void eventoSeleccionado(Bundle datos) {
+        mListener.eventoSeleciconado(datos);
     }
 }

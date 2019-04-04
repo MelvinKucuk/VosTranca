@@ -107,8 +107,10 @@ public class MainActivity extends AppCompatActivity implements ServiciosFragment
     }
 
     @Override
-    public void onFragmentInteraction() {
-
+    public void eventoSeleciconado(Bundle datos) {
+        DetalleFragment fragment = new DetalleFragment();
+        fragment.setArguments(datos);
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragmentContainer, fragment).addToBackStack(null).commit();
     }
 
     @Override

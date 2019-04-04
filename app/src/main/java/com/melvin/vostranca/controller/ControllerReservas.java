@@ -20,4 +20,19 @@ public class ControllerReservas {
             });
         }
     }
+
+    public void grabarReserva(Context context, String nombre, String servicio,
+                              Integer telefono, Integer cantidadPersonas,
+                              String direccion, String fecha, final ResultListener<Boolean> listenerView){
+
+        if (Util.isOnline(context)){
+            Reserva reserva = new Reserva(nombre, servicio, telefono, cantidadPersonas, direccion, fecha);
+            new DaoFirebaseReservas().grabarReserva(reserva, new ResultListener<Boolean>() {
+                @Override
+                public void finish(Boolean resultado) {
+                    listenerView.finish(resultado);
+                }
+            });
+        }
+    }
 }

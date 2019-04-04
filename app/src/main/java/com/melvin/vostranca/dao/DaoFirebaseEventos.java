@@ -8,12 +8,13 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.melvin.vostranca.model.Evento;
 import com.melvin.vostranca.model.Servicio;
 import com.melvin.vostranca.util.ResultListener;
 
 public class DaoFirebaseEventos {
 
-    public void obtenerServicios(final ResultListener<Servicio> lisetnerController){
+    public void obtenerServicios(final ResultListener<Evento> lisetnerController){
 
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("eventos");
 
@@ -22,8 +23,8 @@ public class DaoFirebaseEventos {
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
 
                 // TODO Hacer clase evento
-                Servicio servicio = dataSnapshot.getValue(Servicio.class);
-                lisetnerController.finish(servicio);
+                Evento evento = dataSnapshot.getValue(Evento.class);
+                lisetnerController.finish(evento);
 
             }
 
